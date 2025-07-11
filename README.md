@@ -6,6 +6,9 @@ This project implements a physically-motivated model to generate time series of 
 
 Infographic: https://jjwakefield.github.io/snapping-shrimp/snapping_shrimp.html
 
+<img src="assets/smug_shrimp.png" alt="Smug Shrimp" width="600"/>
+<p align="center"><i>Figure 1: A realistic representation of a snapping shrimp. Image generated using ChatGPT.</i></p>
+
 ## File Structure
 - `snapping_shrimp.py`: The main Python script for the simulation.
 - `snapping_shrimp.html`: The HTML file for the interactive infographic.
@@ -24,8 +27,32 @@ Infographic: https://jjwakefield.github.io/snapping-shrimp/snapping_shrimp.html
   <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
 </p>
 
-![Smug Shrimp](assets/smug_shrimp.png)
-<p align="center"><i>Figure 1: A realistic representation of a snapping shrimp. Image generated using ChatGPT.</i></p>
+## Setup and Usage
+
+To run this simulation and regenerate the data locally, it's recommended to use a Python virtual environment.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/jjwakefield/snapping-shrimp.git](https://github.com/jjwakefield/snapping-shrimp.git)
+    cd snapping-shrimp
+    ```
+2.  **Create and activate a virtual environment:**
+    ```bash
+    # Create the environment
+    python -m venv venv
+    # Activate on macOS/Linux
+    source venv/bin/activate
+    # Or, activate on Windows
+    .\venv\Scripts\activate
+    ```
+3.  **Install the required dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  **Run the script:**
+    ```bash
+    python snapping_shrimp.py
+    ```
 
 ## References
 
@@ -38,3 +65,7 @@ Lewis, P. A. W., & Shedler, G. S. (1979). Simulation of nonhomogeneous Poisson p
 Mahmood, A., Chitre, M., & Theng, L. B. (2018). Modeling and simulation of snapping shrimp noise. *IEEE Journal of Oceanic Engineering*, 43(3), 819-835.
 
 Versluis, M., et al. (2000). How snapping shrimp snap: through cavitating bubbles. *Science*, 289(5487), 2114-2117.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
