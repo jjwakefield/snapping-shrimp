@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Modeling Snapping Shrimp Noise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Slab:wght@700&display=swap"
+      rel="stylesheet"
+    >
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0f9ff; color: #1f2937; }
+        .title-font { font-family: 'Roboto Slab', serif; }
+        .card {
+            background-color: white; border-radius: 1rem; padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07),
+                        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.07),
+                        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .icon { width: 4rem; height: 4rem; margin-bottom: 1rem; }
+        .step-number { font-size: 3rem; font-weight: 700; line-height: 1; }
+        .step-content { z-index: 1; }
+        .card p, .step-content p, .card h3, .step-content h3 { text-wrap: balance; }
+        .bg-wave {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23e0f2fe' fill-opacity='0.4' d='M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,186.7C672,192,768,160,864,144C960,128,1056,128,1152,149.3C1248,171,1344,213,1392,234.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-size: contain;
+        }
+        /* D3 Chart Styles */
+        .mini-chart .axis path,
+        .mini-chart .axis line,
+        .waveform-chart .axis path,
+        .waveform-chart .axis line {
+            fill: none;
+            stroke: #9ca3af;
+            shape-rendering: crispEdges;
+        }
+        .mini-chart .axis text, .waveform-chart .axis text {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            fill: #4b5563;
+        }
+        .waveform-chart .axis text { font-size: 12px; }
+        .waveform-chart .line { fill: none; stroke: #3b82f6; stroke-width: 1px; }
+    </style>
+</head>
+<body class="text-gray-800">
+    <div class="container mx-auto p-4 sm:p-8" style="max-width: 1080px;">
+        <header class="text-center mb-12">
+            <div
+              class="inline-block rounded-full px-4 py-1 text-sm font-semibold mb-4
+                     bg-sky-100 text-sky-800"
+            >
+                BIOACOUSTICS
+            </div>
+            <h1 class="title-font text-4xl md:text-5xl font-bold text-gray-800">
+                The Symphony of the Sea
+            </h1>
+            <p class="text-lg md:text-xl mt-4 text-gray-600">
+                How to Model the Unique Sound of Snapping Shrimp
+            </p>
+        </header>
+
+        <section class="mb-16">
+            <h2 class="title-font text-3xl font-bold text-center mb-8 text-gray-800">
+                What is Snapping Shrimp Noise?
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card" style="border-color: #ff7260;">
+                    <svg
+                      class="icon" style="color: #ff7260;"
+                      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                      stroke-width="1.5" stroke="currentColor"
+                    >
+                        <path
+                          stroke-linecap="round" stroke-linejoin="round"
+                          d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+                        />
+                    </svg>
+                    <h3 class="text-xl font-bold mb-2">Impulsive</h3>
+                    <p>
+                        Characterised by frequent, high-amplitude clicks that sharply
+                        stand out from the average background noise.
+                    </p>
+                </div>
+                <div class="card border-teal-400">
+                    <svg
+                      class="icon text-teal-500" xmlns="http://www.w3.org/2000/svg"
+                      fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                        <path
+                          stroke-linecap="round" stroke-linejoin="round"
+                          d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504
+                             1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125
+                             1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125
+                             1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504
+                             1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5
+                             4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21
+                             4.125v15.75A1.125 1.125 0 0119.875 21h-2.25a1.125 1.125 0
+                             01-1.125-1.125V4.125z"
+                        />
+                    </svg>
+                    <h3 class="text-xl font-bold mb-2">Heavy-Tailed</h3>
+                    <p>
+                        The probability of hearing extremely loud snaps is far greater than
+                        predicted by a standard bell curve (Gaussian) distribution.
+                    </p>
+                </div>
+                <div class="card border-blue-400">
+                    <svg
+                      class="icon text-blue-500" xmlns="http://www.w3.org/2000/svg"
+                      fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                        <path
+                          stroke-linecap="round" stroke-linejoin="round"
+                          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0
+                             00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9
+                             5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5
+                             4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375
+                             3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0
+                             002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456
+                             2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456
+                             2.456zM16.898 20.553L16.5 21.75l-.398-1.197a3.375 3.375 0
+                             00-2.986-2.986L12 17.25l1.197-.398a3.375 3.375 0
+                             002.986-2.986L16.5 12.75l.398 1.197a3.375 3.375 0
+                             002.986 2.986L21 17.25l-1.197.398a3.375 3.375 0
+                             00-2.986 2.986z"
+                        />
+                    </svg>
+                    <h3 class="text-xl font-bold mb-2">Bursty</h3>
+                    <p>
+                        Snaps occur in non-independent clusters, creating periods of intense
+                        activity rather than being evenly spaced over time.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-wave">
+            <h2 class="title-font text-3xl font-bold text-center mb-12 text-gray-800">
+                Building the Sound: A 3-Step Model
+            </h2>
+            <div class="space-y-12">
+                <div class="relative flex flex-col md:flex-row items-center
+                            bg-white p-6 rounded-xl shadow-lg">
+                    <div class="absolute left-6 top-1/2 -translate-y-1/2">
+                        <span class="step-number text-blue-100">1</span>
+                    </div>
+                    <div class="step-content ml-10 md:ml-16 flex-1">
+                        <h3 class="title-font text-2xl font-bold mb-3 text-blue-600">
+                            Snap Timing: When do they snap?
+                        </h3>
+                        <p class="mb-4">
+                            The model predicts the exact moment of each snap using a
+                            <strong class="font-semibold text-blue-500">
+                                Non-Homogeneous Poisson Process (NHPP)
+                            </strong>.
+                            This captures the "bursty" nature of the sound. The snap rate is
+                            influenced&nbsp;by:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>
+                                <strong>Water Temperature:</strong>
+                                A baseline rate is set, with warmer water leading to more
+                                activity.
+                            </li>
+                            <li>
+                                <strong>Rhythmic Cycles:</strong>
+                                Daily (24h) and tidal (~12.4h) cycles are overlaid to
+                                model natural behavioral patterns.
+                            </li>
+                        </ul>
+                    </div>
+                    <div
+                      id="timing-chart"
+                      class="mini-chart w-full md:w-2/5 mt-6 md:mt-0 p-2
+                             flex items-center justify-center"
+                    ></div>
+                </div>
+                <div class="relative flex flex-col md:flex-row items-center
+                            bg-white p-6 rounded-xl shadow-lg">
+                    <div class="absolute left-6 top-1/2 -translate-y-1/2">
+                        <span class="step-number text-teal-100">2</span>
+                    </div>
+                    <div class="step-content ml-10 md:ml-16 flex-1">
+                        <h3 class="title-font text-2xl font-bold mb-3 text-teal-600">
+                            Snap Waveform: What does a snap look like?
+                        </h3>
+                        <p>
+                            Each individual snap—a tiny, broadband event lasting just over 2
+                            milliseconds—is modeled with a realistic
+                            <strong class="font-semibold text-teal-500">Composite Waveform</strong>.
+                            This approach constructs the signal in two parts: a smooth rising onset followed by the sharp, impulsive burst
+                            of the snap itself. The entire waveform is then filtered to accurately represent
+                            the acoustic signature of a collapsing cavitation bubble.
+                        </p>
+                    </div>
+                    <div
+                      id="waveform-step-chart"
+                      class="mini-chart w-full md:w-2/5 mt-6 md:mt-0 p-2
+                             flex items-center justify-center"
+                    ></div>
+                </div>
+                <div class="relative flex flex-col md:flex-row items-center
+                            bg-white p-6 rounded-xl shadow-lg">
+                    <div class="absolute left-6 top-1/2 -translate-y-1/2">
+                        <span class="step-number" style="color: #fee2e2;">3</span>
+                    </div>
+                    <div class="step-content ml-10 md:ml-16 flex-1">
+                        <h3
+                          class="title-font text-2xl font-bold mb-3"
+                          style="color: #ff7260;"
+                        >
+                            Snap Amplitude: How loud is it?
+                        </h3>
+                        <p class="mb-4">
+                            The loudness is modeled using a
+                            <strong class="font-semibold" style="color: #ff7260;">
+                                Symmetric Alpha-Stable (SαS) distribution
+                            </strong>.
+                            This captures the "heavy-tailed" nature of the noise.
+                            Key parameters include:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>
+                                <strong>Impulsiveness (α):</strong> Controls the
+                                probability of extreme, high-amplitude events.
+                            </li>
+                            <li>
+                                <strong>Scale (γ):</strong> Dynamically adjusts the
+                                loudness based on the snap rate—more snaps mean
+                                louder snaps on average.
+                            </li>
+                        </ul>
+                    </div>
+                    <div
+                      id="amplitude-chart"
+                      class="mini-chart w-full md:w-2/5 mt-6 md:mt-0 p-2
+                             flex items-center justify-center"
+                    ></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 text-center">
+             <h2 class="title-font text-3xl font-bold text-center mb-8 text-gray-800">
+                The Final Soundscape
+            </h2>
+             <p class="max-w-3xl mx-auto text-lg mb-8">
+                The final, realistic time series is generated by using the predicted 
+                <strong class="text-blue-500">timing</strong> to place the composite 
+                <strong class="text-teal-500">waveform</strong> for each snap, scaling it with a unique 
+                <strong style="color: #ff7260;">amplitude</strong>, and summing all the events together.
+            </p>
+             <div
+               class="max-w-xl mx-auto mb-8 bg-gray-50 p-4 rounded-lg shadow-inner border"
+             >
+                <p class="text-gray-700 mb-2 font-semibold">
+                    Listen to a sample of the generated sound:
+                </p>
+                <audio id="audio-player" controls class="w-full rounded-lg shadow-md">
+                    <source src="./assets/shrimp_waveform.wav" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
+                <div class="mt-4">
+                    <label
+                      for="volume-boost"
+                      class="block text-sm font-medium text-gray-600 mb-1"
+                    >
+                        Volume Boost
+                    </label>
+                    <input
+                      id="volume-boost" type="range" min="1" max="10" value="1"
+                      step="0.1"
+                      class="w-full h-2 bg-gray-200 rounded-lg appearance-none
+                             cursor-pointer"
+                    >
+                </div>
+            </div>
+             <div class="bg-white rounded-xl p-6 shadow-2xl border">
+                <div id="waveform-chart" class="waveform-chart"></div>
+                <p class="text-sm text-gray-600 mt-4 italic">
+                    A simulated 60s waveform with an average snap rate of ~39 snaps/s, modulated 
+                    by a diurnal rhythm.<br>Each snap is a realistic composite waveform, filtered 
+                    between 1.5–20 kHz, with its amplitude drawn from an SαS distribution (α=1.5) 
+                    to target a source level of 190 dB.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <section class="mt-16 border-t pt-8 mb-16">
+        <h2 class="title-font text-2xl font-bold text-center mb-8 text-gray-700">
+            References
+        </h2>
+        <div class="max-w-4xl mx-auto text-sm text-gray-600 space-y-3 text-left">
+            <p>
+                <strong class="font-semibold text-gray-800">Bohnenstiehl, D. R., et al. (2016).</strong>
+                The curious acoustic behavior of snapping shrimp living on subtidal oyster reefs.
+                <em>The Journal of the Acoustical Society of America</em>, 140(4), 2941-2941.
+            </p>
+            <p>
+                <strong class="font-semibold text-gray-800">Chitre, M. A., Potter, J. R., & Koay, T. B. (2006).</strong>
+                Optimal and near-optimal signal detection in snapping shrimp dominated ambient noise.
+                <em>IEEE Journal of Oceanic Engineering</em>, 31(2), 497-503.
+            </p>
+                <p>
+                <strong class="font-semibold text-gray-800">Lewis, P. A. W., & Shedler, G. S. (1979).</strong>
+                Simulation of nonhomogeneous Poisson processes by thinning.
+                <em>Naval Research Logistics Quarterly</em>, 26(3), 403-413.
+            </p>
+            <p>
+                <strong class="font-semibold text-gray-800">Mahmood, A., Chitre, M., & Theng, L. B. (2018).</strong>
+                Modeling and simulation of snapping shrimp noise.
+                <em>IEEE Journal of Oceanic Engineering</em>, 43(3), 819-835.
+            </p>
+            <p>
+                <strong class="font-semibold text-gray-800">Versluis, M., et al. (2000).</strong>
+                How snapping shrimp snap: through cavitating bubbles.
+                <em>Science</em>, 289(5487), 2114-2117.
+            </p>
+        </div>
+    </section>
+
+    <footer class="text-center mt-12 py-6">
+        <p class="text-sm text-gray-500">
+            Infographic by <a href="#" class="font-semibold text-blue-600 hover:underline">Joshua J. Wakefield</a>
+            <span class="mx-2">|</span>
+            July 2025
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Web Audio API for Volume Boost ---
+            const audioPlayer = document.getElementById('audio-player');
+            const volumeSlider = document.getElementById('volume-boost');
+            volumeSlider.value = 1;
+            let audioContext, gainNode;
+
+            function setupAudioContext() {
+                if (audioContext) return;
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = audioContext.createMediaElementSource(audioPlayer);
+                    gainNode = audioContext.createGain();
+                    source.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    gainNode.gain.value = parseFloat(volumeSlider.value);
+                } catch (e) {
+                    console.error("Web Audio API not supported.", e);
+                }
+            }
+            audioPlayer.addEventListener('play', setupAudioContext, { once: true });
+
+            volumeSlider.addEventListener('input', function() {
+                if (gainNode) {
+                    gainNode.gain.value = parseFloat(this.value);
+                }
+            });
+
+            // --- D3 Chart Logic ---
+            const mainMargin = {top: 20, right: 30, bottom: 55, left: 70};
+            const miniMargin = {top: 10, right: 30, bottom: 70, left: 50};
+
+            function drawChart(selector, dataFile, chartDrawer) {
+                const container = d3.select(selector);
+                if (container.empty()) {
+                    console.error(`Container ${selector} not found.`);
+                    return;
+                }
+                const isMini = container.classed('mini-chart');
+                const margin = isMini ? miniMargin : mainMargin;
+                
+                const width = container.node().clientWidth - margin.left - margin.right;
+                const height = isMini ? 200 - margin.top - margin.bottom : 300 - margin.top - margin.bottom;
+
+                const svg = container.append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+                d3.json(dataFile).then(function(data) {
+                    chartDrawer(svg, data, width, height, margin);
+                }).catch(function(error) {
+                    console.error(`Error loading ${dataFile}:`, error);
+                    container.html(
+                      `<p class="text-xs text-red-500">
+                          Data not found. Try running a local server.
+                      </p>`
+                    );
+                });
+            }
+
+            // --- Chart Drawer Functions ---
+            function drawTimingChart(svg, data, width, height, margin) {
+                const x = d3.scaleLinear().domain([0, 48]).range([0, width]);
+                const y = d3.scaleLinear()
+                            .domain([0, d3.max(data, d => d.rate)])
+                            .nice().range([height, 0]);
+                
+                // Set x-axis ticks at factors of 48 (e.g., 0, 6, 12, 24, 48)
+                const xTicks = [0, 6, 12, 18, 24, 30, 36, 42, 48];
+
+                svg.append("g").attr("transform", `translate(0,${height})`)
+                   .call(d3.axisBottom(x).tickValues(xTicks).tickFormat(d => d)).style("font-size", "12px");
+                svg.append("g")
+                   .call(d3.axisLeft(y).ticks(3).tickFormat(d3.format("~s"))).style("font-size", "12px");
+                
+                svg.append("text")
+                   .attr("x", width / 2).attr("y", height + margin.bottom - 30)
+                   .style("text-anchor", "middle").style("font-size", "12px")
+                   .style("fill", "#4b5563").text("Time (h)");
+                svg.append("text").attr("transform", "rotate(-90)")
+                   .attr("y", 0 - margin.left).attr("x", 0 - (height / 2))
+                   .attr("dy", "1em").style("text-anchor", "middle")
+                   .style("font-size", "12px").style("fill", "#4b5563").text("Rate");
+
+                svg.append("path").datum(data)
+                    .attr("fill", "none").attr("stroke", "#3b82f6")
+                    .attr("stroke-width", 2.5)
+                    .attr("d", d3.line().x(d => x(Math.max(0, Math.min(48, d.time)))).y(d => y(d.rate)));
+            }
+            
+            function drawSnapWaveformChart(svg, data, width, height, margin) {
+                // Filter data to ensure x-axis (time) does not extend beyond 2 ms
+                const filteredData = data.filter(d => d.time <= 2);
+
+                const x = d3.scaleLinear()
+                            .domain([0, 2])
+                            .range([0, width]);
+                const y = d3.scaleLinear().domain([-1, 1]).range([height, 0]);
+
+                svg.append("g").attr("transform", `translate(0,${height})`)
+                   .call(d3.axisBottom(x).ticks(5).tickFormat(d => d)).style("font-size", "12px");
+                svg.append("g").call(d3.axisLeft(y).ticks(3)).style("font-size", "12px");
+
+                svg.append("text")
+                   .attr("x", width / 2).attr("y", height + margin.bottom - 30)
+                   .style("text-anchor", "middle").style("font-size", "12px")
+                   .style("fill", "#4b5563").text("Time (ms)");
+                svg.append("text").attr("transform", "rotate(-90)")
+                   .attr("y", 0 - margin.left).attr("x", 0 - (height / 2))
+                   .attr("dy", "1em").style("text-anchor", "middle")
+                   .style("font-size", "12px").style("fill", "#4b5563").text("Normalised Amplitude");
+
+                svg.append("path").datum(filteredData)
+                    .attr("fill", "none").attr("stroke", "#14b8a6")
+                    .attr("stroke-width", 2.5)
+                    .attr("d", d3.line().x(d => x(d.time)).y(d => y(d.amplitude)));
+            }
+
+            function drawAmplitudeChart(svg, data, width, height, margin) {
+                // FIX: Get data and calculate plot limits manually
+                const { histogram, pdf } = data;
+                const xDomain = d3.extent(pdf, d => d.x);
+                const yMax = d3.max(pdf, d => Math.max(d.levy_pdf, d.gauss_pdf));
+
+                const x = d3.scaleLinear().domain(xDomain).nice().range([0, width]);
+                const y = d3.scaleLinear().domain([0, yMax]).nice().range([height, 0]);
+
+                // Define a clip path
+                svg.append("defs").append("clipPath")
+                    .attr("id", "clip-amplitude")
+                    .append("rect")
+                    .attr("width", width)
+                    .attr("height", height);
+
+                // Draw the axes
+                svg.append("g").attr("transform", `translate(0,${height})`)
+                    .call(
+                        d3.axisBottom(x).ticks(5).tickFormat(d => {
+                            if (Math.abs(d) >= 1000) {
+                                return (d / 1000) + "k";
+                            }
+                            return d;
+                        })
+                    )
+                    .style("font-size", "12px");
+                svg.append("g")
+                    .call(
+                        d3.axisLeft(y)
+                            .ticks(3)
+                            .tickFormat(d => {
+                                if (d === 0) return "0";
+                                const exp = d.toExponential(0);
+                                const match = exp.match(/^([0-9]+)e-(\d+)$/);
+                                if (match) {
+                                    return `${match[1]}e-${match[2]}`;
+                                }
+                                return d;
+                            })
+                    ).style("font-size", "12px");
+
+                // X-axis label
+                svg.append("text")
+                    .attr("x", width / 2)
+                    .attr("y", height + margin.bottom - 30)
+                    .style("text-anchor", "middle")
+                    .style("font-size", "12px")
+                    .style("fill", "#4b5563")
+                    .text("Uncalibrated Pressure");
+
+                // Y-axis label
+                svg.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0 - margin.left)
+                    .attr("x", 0 - (height / 2))
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle")
+                    .style("font-size", "12px")
+                    .style("fill", "#4b5563")
+                    .text("Probability Density");
+
+                // Create a group to hold the clipped chart elements
+                const chartArea = svg.append("g")
+                    .attr("clip-path", "url(#clip-amplitude)");
+
+                // FIX: Use the full histogram data directly
+                chartArea.append("g").selectAll("rect")
+                    .data(histogram)
+                    .join("rect")
+                    .attr("x", d => x(d.x))
+                    .attr("y", d => y(d.y))
+                    .attr("width", d => x(d.x + d.width) - x(d.x))
+                    .attr("height", d => height - y(d.y))
+                    .attr("fill", "cornflowerblue")
+                    .attr("opacity", 0.6);
+
+                // Draw the PDF lines
+                chartArea.append("path").datum(pdf)
+                    .attr("fill", "none")
+                    .attr("stroke", "#ff7260")
+                    .attr("stroke-width", 2.5)
+                    .attr("d", d3.line().x(d => x(d.x)).y(d => y(d.levy_pdf)));
+                chartArea.append("path").datum(pdf)
+                    .attr("fill", "none")
+                    .attr("stroke", "#6b7280")
+                    .attr("stroke-width", 1.5)
+                    .attr("stroke-dasharray", "4 2")
+                    .attr("d", d3.line().x(d => x(d.x)).y(d => y(d.gauss_pdf)));
+
+                // --- Add Legend ---
+                const legendData = [
+                    { label: "Empirical Data", color: "cornflowerblue", opacity: 0.6, type: "rect" },
+                    { label: "SαS", color: "#ff7260", strokeWidth: 2.5, type: "line" },
+                    { label: "Gaussian", color: "#6b7280", strokeWidth: 1.5, dash: "4 2", type: "line" }
+                ];
+
+                const legendGroup = svg.append("g")
+                    .attr("class", "legend-group");
+
+                const legendItems = legendGroup.selectAll(".legend-item")
+                    .data(legendData)
+                    .join("g")
+                    .attr("class", "legend-item");
+
+                // Add symbols
+                legendItems.filter(d => d.type === 'rect').append("rect")
+                    .attr("y", -10) // This centers the 10px tall rectangle on the y=0 line
+                    .attr("width", 15).attr("height", 10)
+                    .attr("fill", d => d.color).attr("opacity", d => d.opacity);
+                    
+                legendItems.filter(d => d.type === 'line').append("line")
+                    .attr("x1", 0).attr("x2", 15)
+                    .attr("y1", -3.5).attr("y2", -3.5)
+                    .attr("stroke", d => d.color)
+                    .attr("stroke-width", d => d.strokeWidth)
+                    .attr("stroke-dasharray", d => d.dash || "none");
+
+                // Add text
+                legendItems.append("text")
+                    .attr("x", 20).text(d => d.label)
+                    .style("font-size", "12px").attr("alignment-baseline", "middle");
+
+                // Position items horizontally based on their actual rendered width
+                let totalWidth = 0;
+                const itemPadding = 25; // Space between legend items
+                legendItems.attr("transform", function() {
+                    const xPos = totalWidth;
+                    totalWidth += this.getBBox().width + itemPadding;
+                    return `translate(${xPos}, 0)`;
+                });
+
+                // Center the entire legend group below the chart
+                legendGroup.attr("transform",
+                    `translate(${(width - totalWidth + itemPadding) / 2}, ${height + 60})`
+                );
+            }
+
+            function drawMainWaveformChart(svg, data, width, height, margin) {
+                const x = d3.scaleLinear()
+                            .domain(d3.extent(data, d => d.time)).nice().range([0, width]);
+                const y = d3.scaleLinear()
+                            .domain(d3.extent(data, d => d.amplitude)).nice()
+                            .range([height, 0]);
+
+                svg.append("g").attr("transform", `translate(0,${height})`)
+                    .call(d3.axisBottom(x).ticks(10)).style("font-size", "14px");
+                svg.append("g")
+                    .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("~s"))).style("font-size", "14px");
+
+                svg.append("text").attr("transform", "rotate(-90)")
+                    .attr("y", 0 - mainMargin.left).attr("x", 0 - (height / 2))
+                    .attr("dy", "1em").style("text-anchor", "middle")
+                    .style("font-size", "14px").style("fill", "#4b5563")
+                    .text("Amplitude (Pa)");
+                svg.append("text")
+                    .attr("x", width / 2).attr("y", height + mainMargin.bottom - 5)
+                    .style("text-anchor", "middle").style("font-size", "14px")
+                    .style("fill", "#4b5563").text("Time (s)");
+
+                svg.append("path").datum(data).attr("class", "line")
+                    .attr("d", d3.line().x(d => x(d.time)).y(d => y(d.amplitude)));
+            }
+
+            // --- Draw all charts ---
+            drawChart("#timing-chart", "./assets/rate_function_data.json", drawTimingChart);
+            drawChart(
+                "#waveform-step-chart", "./assets/single_snap_waveform.json", drawSnapWaveformChart
+            );
+            drawChart(
+                "#amplitude-chart", "./assets/amplitude_distribution_data.json", drawAmplitudeChart
+            );
+            drawChart("#waveform-chart", "./assets/final_waveform_data.json", drawMainWaveformChart);
+        });
+    </script>
+</body>
+</html>
