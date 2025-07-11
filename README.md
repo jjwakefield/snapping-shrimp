@@ -12,6 +12,18 @@ Infographic: https://jjwakefield.github.io/snapping-shrimp/snapping_shrimp.html
 - `/assets`: Contains all the data files (.json, .wav) used by the infographic.
 - `requirements.txt`: A list of the required Python packages for the simulation.
 
+## Tech Stack
+
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Numpy-013243?style=for-the-badge&logo=numpy&logoColor=white" alt="Numpy" />
+  <img src="https://img.shields.io/badge/SciPy-80AAF7?style=for-the-badge&logo=scipy&logoColor=white" alt="SciPy" />
+  <img src="https://img.shields.io/badge/Matplotlib-3776AB?style=for-the-badge&logo=matplotlib&logoColor=white" alt="Matplotlib" />
+  <img src="https://img.shields.io/badge/D3.js-F9A03C?style=for-the-badge&logo=d3.js&logoColor=white" alt="D3.js" />
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+</p>
+
 ![Smug Shrimp](assets/smug_shrimp.png)
 <p align="center"><i>Figure 1: A realistic representation of a snapping shrimp. Image generated using ChatGPT.</i></p>
 
