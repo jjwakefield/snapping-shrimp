@@ -104,7 +104,6 @@ class SnappingShrimp(BiologicalNoiseModel):
     on water temperature and modulated by rhythmic cycles.
     """
 
-    # MODIFIED: Added delay_duration parameter
     def __init__(
         self,
         duration,
@@ -293,7 +292,6 @@ if __name__ == "__main__":
     P_REF_UPA = 1e-6
     SCALE_PRESSURE_PA = P_REF_UPA * (10 ** (TARGET_SL_DB / 20.0))
 
-    # MODIFIED: Instantiation now uses the new waveform parameters
     shrimp_model = SnappingShrimp(
         # --- Simulation Window ---
         start_time_hours=18.0,
