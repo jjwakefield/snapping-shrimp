@@ -6,4 +6,10 @@ This project implements a physically-motivated model to generate time series of 
 
 Infographic: https://jjwakefield.github.io/snapping-shrimp/snapping_shrimp.html
 
+## File Structure
+- `snapping_shrimp.py`: The main Python script for the simulation.
+- `snapping_shrimp.html`: The HTML file for the interactive infographic.
+- `/assets`: Contains all the data files (.json, .wav) used by the infographic.
+- `requirements.txt`: A list of the required Python packages for the simulation.
+
 ![Smug Shrimp](assets/smug_shrimp.png)
