@@ -18,7 +18,11 @@ Infographic: https://jjwakefield.github.io/snapping-shrimp/snapping_shrimp.html
 ## References
 
 Bohnenstiehl, D. R., et al. (2016). The curious acoustic behavior of snapping shrimp living on subtidal oyster reefs. *The Journal of the Acoustical Society of America*, 140(4), 2941-2941.
+
 Chitre, M. A., Potter, J. R., & Koay, T. B. (2006). Optimal and near-optimal signal detection in snapping shrimp dominated ambient noise. *IEEE Journal of Oceanic Engineering*, 31(2), 497-503.
+
 Lewis, P. A. W., & Shedler, G. S. (1979). Simulation of nonhomogeneous Poisson processes by thinning. *Naval Research Logistics Quarterly*, 26(3), 403-413.
+
 Mahmood, A., Chitre, M., & Theng, L. B. (2018). Modeling and simulation of snapping shrimp noise. *IEEE Journal of Oceanic Engineering*, 43(3), 819-835.
+
 Versluis, M., et al. (2000). How snapping shrimp snap: through cavitating bubbles. *Science*, 289(5487), 2114-2117.
