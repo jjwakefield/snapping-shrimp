@@ -6,7 +6,9 @@ This project implements a physically-motivated model to generate time series of 
 
 Infographic: https://jjwakefield.github.io/snapping-shrimp/snapping_shrimp.html
 
-<img src="assets/smug_shrimp.png" alt="Smug Shrimp" width="600"/>
+<p align="center">
+  <img src="assets/smug_shrimp.png" alt="Smug Shrimp" width="600"/>
+</p>
 <p align="center"><i>Figure 1: A realistic representation of a snapping shrimp. Image generated using ChatGPT.</i></p>
 
 ## File Structure
